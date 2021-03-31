@@ -12,14 +12,18 @@ namespace Catalog.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CatalogController : Controller
+    public class CatalogController : ControllerBase
     {
         private readonly IProductRepository _repository;
 
-        public CatalogController(IProductRepository repository)
+        private readonly ILogger<CatalogController> _logger;
+
+        public CatalogController(IProductRepository repository, ILogger<CatalogController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
+
 
 
 

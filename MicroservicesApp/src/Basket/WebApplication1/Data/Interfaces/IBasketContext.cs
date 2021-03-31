@@ -8,6 +8,6 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IBasketContext
     {
-        public IDatabase Redis { get; }
+        //public IDatabase Redis { get; }
     }
 }

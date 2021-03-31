@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,28 +12,35 @@ namespace WebApplication1.Repositories
 {
     public class BasketRepository : IBasketRepository
     {
-        private readonly IBasketContext _context;
+        //private readonly IBasketContext _context;
 
-        public BasketRepository(IBasketContext context)
+        //public BasketRepository(IBasketContext context)
+        //{
+        //    _context = context;
+        //}
+
+         private readonly IDistributedCache _redisCache;
+
+        public BasketRepository(IDistributedCache redisCache)
         {
-            _context = context;
+            _redisCache = redisCache;
         }
 
-        public async Task<bool> DeleteBasket(string userName)
+        public async Task DeleteBasket(string userName)
         {
-           return await _context
-                                .Redis
-                                    .KeyDeleteAsync(userName);
+            await _redisCache
+                                
+                                    .RemoveAsync(userName);
 
                   
         }
 
         public async Task<BasketCart> GetBasket(string userName)
         {
-            var basket =await _context.
-                                Redis
-                                    .StringGetAsync(userName);
-            if (basket.IsNullOrEmpty)
+            var basket =await _redisCache
+                          
+                                    .GetStringAsync(userName);
+            if (String.IsNullOrEmpty(basket))
             {
                 return null;
             }
@@ -41,13 +49,12 @@ namespace WebApplication1.Repositories
 
         public async Task<BasketCart> UpdateBasket(BasketCart basket)
         {
-            var updated = await _context
-                                    .Redis
-                                        .StringSetAsync(basket.UserName, JsonConvert.SerializeObject(basket));
-            if (!updated)
-            {
-                return null;
-            }
+            await _redisCache
+                             .SetStringAsync(basket.UserName, JsonConvert.SerializeObject(basket));
+            //if (!updated)
+            //{
+            //    return null;
+            //}
             return await GetBasket(basket.UserName);
         }
     }

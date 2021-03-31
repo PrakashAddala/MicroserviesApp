@@ -29,14 +29,18 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ConnectionMultiplexer>((sp) =>
-            {   
-                var configurationoptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true);
-                return ConnectionMultiplexer.Connect(configurationoptions);
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetValue<String>("ConnectionStrings:Redis");
             });
+            //services.AddSingleton<ConnectionMultiplexer>((sp) =>
+            //{   
+            //    var configurationoptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true);
+            //    return ConnectionMultiplexer.Connect(configurationoptions);
+            //});
 
-            services.AddTransient<IBasketContext, BasketContext>();
-            services.AddTransient<IBasketRepository, BasketRepository>();
+            //services.AddTransient<IBasketContext, BasketContext>();
+            services.AddScoped  <IBasketRepository, BasketRepository>();
 
             services.AddSwaggerGen(c =>
             {

@@ -10,7 +10,7 @@ namespace WebApplication1.Repositories.Interfaces
     {
         Task<BasketCart> GetBasket(string userName);
         Task<BasketCart> UpdateBasket(BasketCart basket);
-        Task<bool> DeleteBasket(string userName);
+        Task DeleteBasket(string userName);
 
 
     }

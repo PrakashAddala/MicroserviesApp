@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,22 @@ namespace WebApplication1.Data
 {
     public class BasketContext : IBasketContext
     {
-        private readonly ConnectionMultiplexer _redisConnection;
+        //private readonly ConnectionMultiplexer _redisConnection;
+        private readonly IDistributedCache _redisCache;
 
-        public BasketContext(ConnectionMultiplexer redisConnection)
+        public BasketContext(IDistributedCache redisCache)
         {
-            _redisConnection = redisConnection;
-            Redis = redisConnection.GetDatabase();
+            _redisCache = redisCache;
         }
 
-        public IDatabase Redis { get; }
+
+
+        //public BasketContext(ConnectionMultiplexer redisConnection)
+        //{
+        //    _redisConnection = redisConnection;
+        //    Redis = redisConnection.GetDatabase();
+        //}
+
+       // public IDatabase Redis { get; }
     }
 }

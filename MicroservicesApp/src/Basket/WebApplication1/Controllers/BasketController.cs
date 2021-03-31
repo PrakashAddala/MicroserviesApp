@@ -11,7 +11,7 @@ namespace WebApplication1.Controllers
 {
     [Route("äpi/v1/[Controller]")]
     [ApiController]
-    public class BasketController : Controller
+    public class BasketController : ControllerBase
     {
         private readonly IBasketRepository _repository;
 
@@ -20,7 +20,7 @@ namespace WebApplication1.Controllers
             _repository = repository;
         }
 
-        [HttpGet]
+        [HttpGet("{userName}", Name = "GetBasket")]
         [ProducesResponseType(typeof(BasketCart),(int)HttpStatusCode.OK)]
         public async Task<ActionResult<BasketCart>> GetBasket(string userName)
         {
@@ -37,11 +37,11 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpDelete("{userName}")]
+        [HttpDelete("{userName}", Name = "DeleteCart")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<BasketCart>> DeleteCart(string userName)
+        public async Task DeleteCart(string userName)
         {
-            return Ok(await _repository.DeleteBasket(userName));
+             await _repository.DeleteBasket(userName);
 
         }
     }
